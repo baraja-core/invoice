@@ -1,0 +1,2 @@
+services:
+	- Baraja\Invoice\InvoiceGenerator(%tempDir%, %wwwDir%)

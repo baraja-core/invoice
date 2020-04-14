@@ -1,0 +1,104 @@
+<meta charset="UTF-8">
+<style>
+	body {
+		font-family: Roboto;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	.items tr th {
+		border-bottom: 1px solid #ff7054;
+		padding: 16px 8px;
+		color: #ae2a2a;
+		text-align: left;
+	}
+
+	.items tr td {
+		border-bottom: 1px solid #c7c7c7;
+		padding: 16px 8px;
+	}
+</style>
+<div style="width:700px;margin-left:auto;margin-right:auto">
+	<table style="width:100%">
+		<tr>
+			<td valign="top">
+				{$config->getLogo()|noescape}
+			</td>
+			<td width="300">
+				<table>
+					<tr>
+						<td style="width:300px;background:#ae2a2a;color:white;padding:8px;text-align:center">
+							{$config->getTranslation()['invoiceNumber']} {$invoiceNumber}
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<!-- -->
+	<table style="width:100%" cellspacing="10">
+		<tr>
+			<td style="width:333px;padding:16px;border:1px solid #b1b1b1" valign="top">
+				<b style="color:#ae2a2a">{$config->getTranslation()['supplier']}</b>
+				<br><br>
+				{$order->getSupplierAddress()|noescape}
+			</td>
+			<td style="padding:16px;border:1px solid #b1b1b1" valign="top">
+				<b style="color:#ae2a2a">{$config->getTranslation()['subscriber']}</b>
+				<br><br>
+				{$order->getSubscriberAddress()|noescape}
+			</td>
+		</tr>
+		<tr>
+			<td style="padding:16px;border:1px solid #b1b1b1">
+				<b style="color:#ae2a2a">{$config->getTranslation()['accountNumber']}</b> 3141592648/2010<br>
+				<b style="color:#ae2a2a">{$config->getTranslation()['variable']}</b> {$order->getVariable()}
+			</td>
+			<td style="padding:16px;border:1px solid #b1b1b1">
+				<b style="color:#ae2a2a">{$config->getTranslation()['dateOfIssue']}</b>
+				{$order->getInsertedDate()->format('d. m. Y')}<br>
+				<b style="color:#ae2a2a">{$config->getTranslation()['dueDate']}</b>
+				{date('d. m. Y', strtotime($order->getInsertedDate()->format('Y-m-d') . ' + ' . $order->getDueDateCountDays() . ' days'))}
+			</td>
+		</tr>
+	</table>
+	<!-- -->
+	<div style="width:642px;margin-left:auto;margin-right:auto;padding:8px;border:1px solid #b1b1b1">
+		<table style="width:100%" cellspacing="0" class="items">
+			<tr>
+				<th>{$config->getTranslation()['itemLabel']}</th>
+				<th n:if="$config->getTranslation()['itemLabelSecond'] !== null">
+					{$config->getTranslation()['itemLabelSecond']}
+				</th>
+				<th>{$config->getTranslation()['itemLabelCount']}</th>
+				<th>{$config->getTranslation()['itemLabelPrice']}</th>
+			</tr>
+			<tr n:foreach="$items as $item">
+				<td>{$item->getName()}</td>
+				<td n:if="$config->getTranslation()['itemLabelSecond'] !== null">
+					{$item->getSecondLabel()}
+				</td>
+				<td>{$item->getCount()}</td>
+				<td>{$item->getPriceFormatted()|noescape}</td>
+			</tr>
+		</table>
+		<table style="width:100%">
+			<tr>
+				<td style="color:#ae2a2a;font-size:20pt;font-weight:bold;padding:25px 16px 16px 16px">
+					{$config->getTranslation()['finalPrice']}
+				</td>
+				<td style="text-align:right;padding:16px;font-size:20pt">
+					{$order->getPriceFormatted()|noescape}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<p n:if="$config->getFooterVatMessage() !== null" style="color:#ae2a2a;text-align:right">
+		{$config->getFooterVatMessage()}
+	</p>
+	<p n:if="$config->getFooterMessage() !== null" style="color:black;font-size:14pt;text-align:right">
+		{$config->getFooterMessage()}
+	</p>
+</div>
